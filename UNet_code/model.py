@@ -18,7 +18,7 @@ class SegmentationModel(nn.Module):
 
         self.class_weights = class_weights # Specify class weights as [ratio_class_0, ratio_class_1]
 
-    def weighted_bce(self, logits, masks):
+    def weighted_bce(self, logits, masks): # From: https://stackoverflow.com/a/67778392T
         weighted_bce = -masks * self.class_weights[1] * torch.log(logits) - (1 - masks) * self.class_weights[0] * torch.log(1 - logits)
         return torch.mean(weighted_bce)
 
