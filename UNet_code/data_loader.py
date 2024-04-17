@@ -6,7 +6,7 @@ import albumentations as A
 import rasterio
 
 class CustomDataLoader(Dataset):
-    def __init__(self, image_path, mask_path, height = 512, width = 512, data_type = '', expand_dims = True):
+    def __init__(self, image_path, mask_path, height = 512, width = 512, data_type = '', expand_dims = True, channels = 'r.g.b'):
         super().__init__()
         self.X = sorted(glob.glob(image_path))
         self.y = sorted(glob.glob(mask_path))
@@ -19,12 +19,19 @@ class CustomDataLoader(Dataset):
             A.Resize(height,width),
             A.HorizontalFlip(),
         ])
+        self.channels = channels.split('.')
         
     def __getitem__(self, idx):
         # Open with rasterio and shape into an RGB image
         img = rasterio.open(self.X[idx]).read()
         b, g, r, nir, swir1, swir2, slope  = img
-        img = np.stack((r,g,b), axis = -1).astype(np.float64)
+        channel_dict = {'r': r, 'g': g, 'b': b, 'nir': nir, 'swir1': swir1, 'swir2': swir2}
+        used_channels = []
+        for channel in self.channels:
+            if channel in channel_dict:
+                used_channels.append(channel_dict[channel])
+        img = np.stack(used_channels, axis = -1).astype(np.float64)
+        # img = np.stack((r,g,b), axis = -1).astype(np.float64)
 
         # Get rid of the first, empty dimension
         mask = rasterio.open(self.y[idx]).read()[0, :, :]
