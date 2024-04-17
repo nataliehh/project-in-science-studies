@@ -22,7 +22,7 @@ parser.add_argument('--num_classes', type=int,
 parser.add_argument('--max_iterations', type=int,
                     default=30000, help='maximum epoch number to train')
 parser.add_argument('--max_epochs', type=int,
-                    default=10, help='maximum epoch number to train')
+                    default=100, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int,
                     default=12, help='batch_size per gpu')
 parser.add_argument('--n_gpu', type=int, default=1, help='total gpu')
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed(args.seed)
     args.img_size = 256
-    args.batch_size = 16 # 8
+    args.batch_size = 8
     dataset_name = args.dataset
     dataset_config = {
         'S1S2': {
