@@ -5,7 +5,7 @@ import numpy as np
 
 def train_fn(data_loader, model, optimizer, device):
     model.train()
-    total_diceloss=0.0
+    total_lovaszloss=0.0
     total_bceloss=0.0
     for images, masks in tqdm(data_loader):
         images = images.to(device, dtype=torch.float32)
@@ -13,26 +13,26 @@ def train_fn(data_loader, model, optimizer, device):
 
         optimizer.zero_grad()
 
-        logits, diceloss, bceloss = model(images, masks)
-        diceloss.backward(retain_graph = True)
+        logits, lovaszloss, bceloss = model(images, masks)
+        lovaszloss.backward(retain_graph = True)
         bceloss.backward()
         optimizer.step()
-        total_diceloss += diceloss.item()
+        total_lovaszloss += lovaszloss.item()
         total_bceloss += bceloss.item()  
 
-    return total_diceloss/len(data_loader), total_bceloss/len(data_loader)
+    return total_lovaszloss/len(data_loader), total_bceloss/len(data_loader)
 
 def eval_fn(data_loader, model, device, sample_num = 2, ratio = 0.05, visualization = False):
     model.eval()
-    total_diceloss = 0.0
+    total_lovaszloss = 0.0
     total_bceloss = 0.0
     with torch.no_grad():
         for images, masks in tqdm(data_loader):
             images = images.to(device, dtype = torch.float32)
             masks = masks.to(device, dtype = torch.float32)
 
-            logits, diceloss, bceloss = model(images,masks)
-            total_diceloss += diceloss.item()
+            logits, lovaszloss, bceloss = model(images,masks)
+            total_lovaszloss += lovaszloss.item()
             total_bceloss += bceloss.item()
             
         #Visualization
@@ -50,4 +50,4 @@ def eval_fn(data_loader, model, device, sample_num = 2, ratio = 0.05, visualizat
                 axarr[2].imshow(np.transpose(pred_mask.detach().cpu().squeeze(0), (1,2,0)))
                 plt.show()
             
-    return total_diceloss/len(data_loader),total_bceloss/len(data_loader)
+    return total_lovaszloss/len(data_loader),total_bceloss/len(data_loader)
