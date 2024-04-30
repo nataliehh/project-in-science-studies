@@ -28,7 +28,7 @@ parser.add_argument('--encoder', type=str, default='efficientnet-b0', help = 'vi
 parser.add_argument('--weights', type=str, default='imagenet', help = 'pretrained weights')
 parser.add_argument('--model_ckpt_path', type=str, default='./networks', help = 'where to store model checkpoints')
 parser.add_argument('--data_path', type=str, default='../data_prepped', help = 'where dataset is stored')
-parser.add_argument('--channels', type=str, default='r.g.b', help = 'which image channels (i.e. R, G, B, NIR, SWIR1, SWIR2) to use, separate by comma')
+parser.add_argument('--channels', type=str, default='r.g.b', help = 'which image channels (i.e. R, G, B, NIR, SWIR1, SWIR2) to use, separated by comma')
 args = parser.parse_args()
 
 if __name__ == "__main__":

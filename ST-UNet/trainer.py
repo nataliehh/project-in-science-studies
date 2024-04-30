@@ -37,7 +37,7 @@ def cal(pred, label, num_categories = 5):
     m = iou.mean()
     return m
 
-def trainer_synapse(args, model, snapshot_path, print_per_iter = 100):
+def trainer_synapse(args, model, snapshot_path, print_per_iter = 1000):
     logging.basicConfig(filename=snapshot_path + "/log.txt", level=logging.INFO,
                         format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%H:%M:%S')
     # logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # uncomment to also print logs 
@@ -84,7 +84,11 @@ def trainer_synapse(args, model, snapshot_path, print_per_iter = 100):
         # print('epoch:',epoch_num)
         epoch_loss = 0
         logging.info('epoch {}'.format(epoch_num))
+        i = 0
         for sampled_batch in tqdm(train_loader):
+            i += 1
+            # if i > 100:
+            #     break
             image_batch, label_batch = sampled_batch 
             image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
 
