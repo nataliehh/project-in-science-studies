@@ -5,3 +5,4 @@ requirements_pip_freeze.txt
 *.csv
 *.geojson
 *.tif
+*.json
