@@ -24,8 +24,12 @@ class CustomDataLoader(Dataset):
     def __getitem__(self, idx):
         # Open with rasterio and shape into an RGB image
         img = rasterio.open(self.X[idx]).read()
-        b, g, r, nir, swir1, swir2, slope  = img
-        channel_dict = {'r': r, 'g': g, 'b': b, 'nir': nir, 'swir1': swir1, 'swir2': swir2}
+        if len(img) == 7:
+            b, g, r, nir, swir1, swir2, slope  = img
+            channel_dict = {'r': r, 'g': g, 'b': b, 'nir': nir, 'swir1': swir1, 'swir2': swir2}
+        else:
+            r, g, b = img
+            channel_dict = {'r': r, 'g': g, 'b': b}
         used_channels = []
         for channel in self.channels:
             if channel in channel_dict:
@@ -34,7 +38,10 @@ class CustomDataLoader(Dataset):
         # img = np.stack((r,g,b), axis = -1).astype(np.float64)
 
         # Get rid of the first, empty dimension
-        mask = rasterio.open(self.y[idx]).read()[0, :, :]
+        if '.npy' in self.y[idx]:
+            mask = np.load(self.y[idx])
+        else:
+            mask = rasterio.open(self.y[idx]).read()[0, :, :]
         
         img, mask = np.array(img), np.array(mask)
         preprocess_fn = self.transform(image=img, mask=mask)
