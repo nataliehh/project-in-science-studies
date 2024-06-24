@@ -35,8 +35,8 @@ lrs = [0.01, 0.001, 0.0001]
 batch_sizes = [4, 8, 16]
 
 if __name__ == "__main__":
-    for lr in lrs:
-        for batch_size in batch_sizes:
+    for batch_size in batch_sizes:
+        for lr in lrs:
             args.lr = lr
             args.batch_size = batch_size
             print(f'batch size {batch_size}, learning rate {lr}')

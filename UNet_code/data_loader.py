@@ -27,6 +27,9 @@ class CustomDataLoader(Dataset):
         if len(img) == 7:
             b, g, r, nir, swir1, swir2, slope  = img
             channel_dict = {'r': r, 'g': g, 'b': b, 'nir': nir, 'swir1': swir1, 'swir2': swir2}
+        elif len(img) == 6:
+            b, g, r, nir, swir1, swir2  = img
+            channel_dict = {'r': r, 'g': g, 'b': b, 'nir': nir, 'swir1': swir1, 'swir2': swir2}   
         else:
             r, g, b = img
             channel_dict = {'r': r, 'g': g, 'b': b}
