@@ -1,6 +1,7 @@
 */
 !/ST-UNet
 !/UNet_code
+!/UNet_code/results
 requirements_pip_freeze.txt
 *.csv
 *.geojson
